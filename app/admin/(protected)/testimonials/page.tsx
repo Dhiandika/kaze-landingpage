@@ -3,8 +3,10 @@ import Link from "next/link";
 import { PlusCircle } from "lucide-react";
 import DeleteTestimonialButton from "@/components/admin/DeleteTestimonialButton";
 
+import { Testimonial } from "@prisma/client";
+
 export default async function TestimonialsPage() {
-    let testimonials = [];
+    let testimonials: Testimonial[] = [];
     try {
         testimonials = await prisma.testimonial.findMany({
             orderBy: { createdAt: "desc" },

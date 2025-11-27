@@ -4,8 +4,10 @@ import { Plus, Pencil, Trash2, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import { DeleteProjectButton } from "@/components/admin/DeleteProjectButton";
 
+import { Portfolio } from "@prisma/client";
+
 export default async function AdminProjectsPage() {
-    let projects = [];
+    let projects: Portfolio[] = [];
     try {
         projects = await prisma.portfolio.findMany({
             orderBy: { createdAt: "desc" },

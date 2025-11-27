@@ -4,9 +4,11 @@ import { PlusCircle, User } from "lucide-react";
 import DeleteUserButton from "@/components/admin/DeleteUserButton";
 import { auth } from "@/auth";
 
+import { User as PrismaUser } from "@prisma/client";
+
 export default async function UsersPage() {
     const session = await auth();
-    let users = [];
+    let users: PrismaUser[] = [];
     try {
         users = await prisma.user.findMany({
             orderBy: { createdAt: "desc" },
