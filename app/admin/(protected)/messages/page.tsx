@@ -5,9 +5,14 @@ import { MarkReadButton } from "@/components/admin/MarkReadButton";
 import { Message } from "@prisma/client";
 
 export default async function AdminMessagesPage() {
-    const messages: Message[] = await prisma.message.findMany({
-        orderBy: { createdAt: "desc" },
-    });
+    let messages: Message[] = [];
+    try {
+        messages = await prisma.message.findMany({
+            orderBy: { createdAt: "desc" },
+        });
+    } catch (error) {
+        console.error("Messages DB Error:", error);
+    }
 
     return (
         <div className="space-y-6">

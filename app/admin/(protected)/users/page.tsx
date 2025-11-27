@@ -6,9 +6,14 @@ import { auth } from "@/auth";
 
 export default async function UsersPage() {
     const session = await auth();
-    const users = await prisma.user.findMany({
-        orderBy: { createdAt: "desc" },
-    });
+    let users = [];
+    try {
+        users = await prisma.user.findMany({
+            orderBy: { createdAt: "desc" },
+        });
+    } catch (error) {
+        console.error("Users DB Error:", error);
+    }
 
     return (
         <div>

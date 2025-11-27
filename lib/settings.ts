@@ -2,9 +2,14 @@ import prisma from "@/lib/prisma";
 import { cache } from "react";
 
 export const getSiteSettings = cache(async () => {
-    let settings = await prisma.siteSettings.findUnique({
-        where: { id: "settings" },
-    });
+    let settings = null;
+    try {
+        settings = await prisma.siteSettings.findUnique({
+            where: { id: "settings" },
+        });
+    } catch (error) {
+        console.error("Settings DB Error:", error);
+    }
 
     if (!settings) {
         // Return defaults if not found (should be handled by seed/API, but safe fallback)

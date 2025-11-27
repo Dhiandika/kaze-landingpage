@@ -4,9 +4,14 @@ import { PlusCircle } from "lucide-react";
 import DeleteTestimonialButton from "@/components/admin/DeleteTestimonialButton";
 
 export default async function TestimonialsPage() {
-    const testimonials = await prisma.testimonial.findMany({
-        orderBy: { createdAt: "desc" },
-    });
+    let testimonials = [];
+    try {
+        testimonials = await prisma.testimonial.findMany({
+            orderBy: { createdAt: "desc" },
+        });
+    } catch (error) {
+        console.error("Testimonials DB Error:", error);
+    }
 
     return (
         <div>
