@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  posts     Post[]
+}
+
+model Portfolio {
+  id           String   @id @default(cuid())
+  title        String
+  slug         String   @unique @default(cuid()) // Default to cuid to avoid migration errors on existing data, will update later
+  category     String
+  imageUrl     String
+  description  String?
+  client       String?
+  year         String?
+  projectUrl   String?  // External link to live project
+  
+  // Case Study Fields
+  problem      String?
+  solution     String?
+  result       String?
+  content      String?  // Markdown content
+  technologies String?  // Stored as JSON string or comma-separated for SQLite simplicity
+  gallery      String?  // Stored as JSON string for SQLite simplicity
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  quote     String
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+  read      Boolean  @default(false)
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  content   String
+  excerpt   String?
+  coverImage String?
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  authorId  String?
+  author    User?    @relation(fields: [authorId], references: [id])
+}
+
+model Analytics {
+  id        String   @id @default(cuid())
+  path      String
+  ip        String?  // Hashed IP for privacy
+  userAgent String?
+  country   String?
+  device    String?  // mobile, desktop, tablet
+  createdAt DateTime @default(now())
+}
+
+model SiteSettings {
+  id          String   @id @default("settings") // Singleton ID
+  email       String   @default("hello@kazekreativ.my.id")
+  phone       String   @default("+62 812 3456 7890")
+  address     String   @default("Jakarta, Indonesia")
+  instagram   String   @default("https://instagram.com")
+  linkedin    String   @default("https://linkedin.com")
+  github      String   @default("https://github.com")
+  updatedAt   DateTime @updatedAt
+}
