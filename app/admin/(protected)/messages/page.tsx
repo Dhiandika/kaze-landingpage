@@ -2,9 +2,10 @@ import prisma from "@/lib/prisma";
 import { Mail, Trash2, CheckCircle, Clock } from "lucide-react";
 import { DeleteMessageButton } from "@/components/admin/DeleteMessageButton";
 import { MarkReadButton } from "@/components/admin/MarkReadButton";
+import { Message } from "@prisma/client";
 
 export default async function AdminMessagesPage() {
-    const messages = await prisma.message.findMany({
+    const messages: Message[] = await prisma.message.findMany({
         orderBy: { createdAt: "desc" },
     });
 
@@ -22,8 +23,8 @@ export default async function AdminMessagesPage() {
                     <div
                         key={msg.id}
                         className={`p-6 rounded-2xl border transition-all ${msg.read
-                                ? "bg-white dark:bg-white/5 border-gray-200 dark:border-white/10 opacity-75"
-                                : "bg-blue-50 dark:bg-blue-900/10 border-blue-100 dark:border-blue-900/20 shadow-sm"
+                            ? "bg-white dark:bg-white/5 border-gray-200 dark:border-white/10 opacity-75"
+                            : "bg-blue-50 dark:bg-blue-900/10 border-blue-100 dark:border-blue-900/20 shadow-sm"
                             }`}
                     >
                         <div className="flex flex-col md:flex-row justify-between gap-4 mb-4">
