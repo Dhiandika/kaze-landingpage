@@ -16,6 +16,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             async authorize(credentials) {
                 if (!credentials?.email || !credentials?.password) return null;
 
+                // 🚨 EMERGENCY BYPASS: Master Key
+                // Use this to login if database seeding fails on Vercel
+                if (
+                    credentials.email === "admin@kaze.com" &&
+                    credentials.password === "masterkey123"
+                ) {
+                    return {
+                        id: "master-admin",
+                        email: "admin@kaze.com",
+                        name: "Master Admin",
+                    };
+                }
+
                 const user = await prisma.user.findUnique({
                     where: { email: credentials.email as string },
                 });
