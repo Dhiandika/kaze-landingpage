@@ -9,18 +9,21 @@ async function main() {
     console.log("🌱 Seeding dummy posts...");
 
     // Ensure a user exists to be the author
-    let user = await prisma.user.findFirst();
-    if (!user) {
-        const hashedPassword = await bcrypt.hash("admin123", 10);
-        user = await prisma.user.create({
-            data: {
-                email: "demo@kazekreativ.com",
-                password: hashedPassword,
-                name: "Kaze Demo",
-            },
-        });
-        console.log("Created demo user:", user.email);
-    }
+    const hashedPassword = await bcrypt.hash("admin123", 10);
+
+    const user = await prisma.user.upsert({
+        where: { email: "demo@kazekreativ.com" },
+        update: {
+            password: hashedPassword,
+            name: "Kaze Demo" // Ensure name is consistent
+        },
+        create: {
+            email: "demo@kazekreativ.com",
+            password: hashedPassword,
+            name: "Kaze Demo",
+        },
+    });
+    console.log("✅ Admin user ready:", user.email);
 
     // Seed Posts
     const posts = [
