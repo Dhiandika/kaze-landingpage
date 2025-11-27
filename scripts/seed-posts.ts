@@ -3,6 +3,8 @@ import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
+// Force git update
+
 async function main() {
     console.log("🌱 Seeding dummy posts...");
 
