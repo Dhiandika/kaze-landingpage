@@ -2,10 +2,12 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { authConfig } from "./auth.config";
 
 const prisma = new PrismaClient();
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+    ...authConfig,
     providers: [
         CredentialsProvider({
             name: "Credentials",
@@ -17,7 +19,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 if (!credentials?.email || !credentials?.password) return null;
 
                 // 🚨 EMERGENCY BYPASS: Master Key
-                // Use this to login if database seeding fails on Vercel
                 if (
                     credentials.email === "admin@kaze.com" &&
                     credentials.password === "masterkey123"
@@ -46,15 +47,4 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             },
         }),
     ],
-    pages: {
-        signIn: "/admin/login",
-    },
-    callbacks: {
-        async session({ session, token }) {
-            if (session?.user) {
-                session.user.id = token.sub as string;
-            }
-            return session;
-        },
-    },
 });
