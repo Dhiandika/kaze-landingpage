@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -8,10 +9,11 @@ async function main() {
     // Ensure a user exists to be the author
     let user = await prisma.user.findFirst();
     if (!user) {
+        const hashedPassword = await bcrypt.hash("admin123", 10);
         user = await prisma.user.create({
             data: {
                 email: "demo@kazekreativ.com",
-                password: "hashed_password_placeholder", // Not used for login in this demo
+                password: hashedPassword,
                 name: "Kaze Demo",
             },
         });
